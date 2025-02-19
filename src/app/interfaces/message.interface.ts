@@ -5,5 +5,6 @@ export interface Message {
     UserScore: number;
     errors: string[];
     message: string;
-  }
+  },
+  audioUrl?: string;
 }
