@@ -19,16 +19,16 @@ import { OpenAiService } from 'app/presentation/services/openai.service';
 })
 export class ChatTemplateComponent {
   public messages = signal<Message[]>([]);
-    public isLoading = signal(false);
-    public openAiService = inject(OpenAiService);
+  public isLoading = signal(false);
+  public openAiService = inject(OpenAiService);
 
-    handleMessage( prompt: string ){
-      console.log({prompt});
-    }
-    // handleMessageWithField( {prompt, file}: TextMessageEvent ){
-    //   console.log({ prompt, file });
-    // }
-    // handleMessageWithSelect(event: TextMessageBoxEvent ){
-    //   console.log({event});
-    // }
- }
+  handleMessage(prompt: string) {
+    console.log({ prompt });
+  }
+  // handleMessageWithField( {prompt, file}: TextMessageEvent ){
+  //   console.log({ prompt, file });
+  // }
+  // handleMessageWithSelect(event: TextMessageBoxEvent ){
+  //   console.log({event});
+  // }
+}
