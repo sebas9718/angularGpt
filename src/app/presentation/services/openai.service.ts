@@ -1,37 +1,54 @@
 import { Injectable } from '@angular/core';
-import { audioToTextUseCase, imageGenerationUseCase, imageVariationUseCase, orthographyUseCase, prosConsStreamUseCase, prosConsUseCase, textToAudioUseCase, translateUseCase } from '@use-cases//index';
-import { from } from 'rxjs';
+import { audioToTextUseCase, createThreadUseCase, imageGenerationUseCase, imageVariationUseCase, orthographyUseCase, postQuestionUseCase, prosConsStreamUseCase, prosConsUseCase, textToAudioUseCase, translateUseCase } from '@use-cases//index';
+import { from, Observable, of, tap } from 'rxjs';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class OpenAiService {
 
-  checkOrthography( prompt: string ) {
-    return from( orthographyUseCase( prompt ));
+  checkOrthography(prompt: string) {
+    return from(orthographyUseCase(prompt));
   }
-  prosConsDiscusser( prompt: string ) {
-    return from( prosConsUseCase( prompt ));
+  prosConsDiscusser(prompt: string) {
+    return from(prosConsUseCase(prompt));
   }
-  prosConsStreamDiscusser( prompt: string, abortSignal: AbortSignal ) {
-    return prosConsStreamUseCase( prompt, abortSignal );
-  }
-
-  translateText( prompt: string, lang: string ) {
-    return from(translateUseCase( prompt, lang ));
+  prosConsStreamDiscusser(prompt: string, abortSignal: AbortSignal) {
+    return prosConsStreamUseCase(prompt, abortSignal);
   }
 
-  textToAudio( prompt: string, voice: string ) {
-    return from(textToAudioUseCase( prompt, voice ));
+  translateText(prompt: string, lang: string) {
+    return from(translateUseCase(prompt, lang));
   }
 
-  audioToText( file: File, prompt?: string ) {
-    return from(audioToTextUseCase( file, prompt ));
+  textToAudio(prompt: string, voice: string) {
+    return from(textToAudioUseCase(prompt, voice));
   }
 
-  imageGeneration( prompt: string, originalImage?: string, maskImage?: string ) {
+  audioToText(file: File, prompt?: string) {
+    return from(audioToTextUseCase(file, prompt));
+  }
+
+  imageGeneration(prompt: string, originalImage?: string, maskImage?: string) {
     return from(imageGenerationUseCase(prompt, originalImage, maskImage));
   }
 
-  imageVariation( originalImage: string ) {
+  imageVariation(originalImage: string) {
     return from(imageVariationUseCase(originalImage));
+  }
+
+  createdThread(): Observable<string> {
+    if (localStorage.getItem('thread')) {
+      return of(localStorage.getItem('thread')!);
+    }
+
+    return from(createThreadUseCase())
+      .pipe(
+        tap((thread) => {
+          localStorage.setItem('thread', thread);
+        })
+      )
+  }
+
+  postQuestion(threadId: string, question: string) {
+    return from(postQuestionUseCase(threadId, question));
   }
 }
